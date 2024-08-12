@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                                 
+    "lib": ["DOM", "ESNext"],                                        
+    "jsx": "react",                                
+    "moduleDetection": "auto",                       
+    "module": "NodeNext",                                
+    "rootDir": "./",                                 
+    "moduleResolution": "NodeNext",                    
+    "baseUrl": "./",                                 
+    "paths": {
+      "@/*": ["./src/*"],
+    },                                      
+    // "rootDirs": [],                                   
+    "typeRoots": ["./src/types", "./node_modules/@types"],                                  
+    // "types": [],                                     
+    "resolveJsonModule": true,                   
+    "allowJs": true,                                 
+    "checkJs": true,                                  
+    "outDir": "build",                                   
+    "esModuleInterop": true,                             
+    "forceConsistentCasingInFileNames": true,
+    /* Type Checking */
+    "strict": true,                                      
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "src/**/*.tsx"],
+
+   
+}
