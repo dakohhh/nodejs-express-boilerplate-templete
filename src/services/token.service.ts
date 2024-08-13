@@ -31,7 +31,7 @@ export class TokenService {
         return { access_token: accessToken };
     }
 
-    static async generateEmailVerificationToken({
+    static async generateVerificationAndResetToken({
         userId,
         token_type,
     }: {
@@ -50,7 +50,7 @@ export class TokenService {
         const token = await VerificationToken.create({
             user: userId,
             token: hashedToken,
-            type: VERIFICATION_TOKEN_TYPE.EMAIL_VERIFICATION,
+            type: token_type,
             expires_at: expiry,
         });
 

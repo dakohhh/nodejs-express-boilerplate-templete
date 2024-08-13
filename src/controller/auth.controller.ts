@@ -33,16 +33,32 @@ class AuthController {
         }
     }
 
-    static async requestVerificationEmail(req: Request, res: Response, next: NextFunction){
-
+    static async requestVerificationEmail(req: Request, res: Response, next: NextFunction) {
         try {
             const results = await AuthService.requestEmailVerification(req);
-            res.status(StatusCodes.OK).json(response('verificaiton link sent successfully'))
-        }
-        catch(error){
+            res.status(StatusCodes.OK).json(response('verificaiton link sent successfully'));
+        } catch (error) {
             next(error);
         }
+    }
 
+    static async requestPasswordReset(req: Request, res: Response, next: NextFunction) {
+        try {
+            const results = await AuthService.requestPasswordReset(req);
+            res.status(StatusCodes.OK).json(response('password reset link sent successfully'));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async resetPassword(req:Request, res: Response, next: NextFunction) {
+        try{
+            const results = await AuthService.resetPassword(req);
+            res.status(StatusCodes.OK).json(response('password reset successful', results));
+
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

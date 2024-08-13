@@ -9,7 +9,7 @@ import { VERIFICATION_TOKEN_TYPE } from '@/enums/token-types';
 
 import MailService from './mail.service';
 import VerificationToken from '@/models/verification.model';
-import EmailVerification from '@/email-templates/email-verifcation';
+import EmailVerification from '@/email-templates/email-verification';
 
 // import { transporter } from '@/libraries/nodemailer';
 
@@ -20,7 +20,7 @@ class AuthService {
             lastname: Joi.string().trim().min(3).max(30).required(),
             phoneNumber: Joi.string().trim().min(10).max(10).required(),
             email: Joi.string().trim().email().required(),
-            password: Joi.string().min(8).required(),
+            password: Joi.string().trim().min(8).required(),
         })
             .options({ stripUnknown: true })
             .validate(body);
@@ -45,7 +45,7 @@ class AuthService {
         const { password, ...student } = new_user.toObject();
 
         // Generate toke for verification
-        const token = await TokenService.generateEmailVerificationToken({
+        const token = await TokenService.generateVerificationAndResetToken({
             userId: new_user._id,
             token_type: VERIFICATION_TOKEN_TYPE.EMAIL_VERIFICATION,
         });
@@ -57,7 +57,7 @@ class AuthService {
 
     static async requestEmailVerification({ body }: Partial<Request>) {
         const { error, value } = Joi.object({
-            email: Joi.string().email().required(),
+            email: Joi.string().trim().email().required(),
         })
             .options({ stripUnknown: true })
             .validate(body);
@@ -70,12 +70,39 @@ class AuthService {
 
         if (user.isVerified) throw new BadRequestException('user is already verified');
 
-        const token = await TokenService.generateEmailVerificationToken({
+        const token = await TokenService.generateVerificationAndResetToken({
             userId: user._id,
             token_type: VERIFICATION_TOKEN_TYPE.EMAIL_VERIFICATION,
         });
 
+        // Implement a task queue when sending emails, to reduce workload on the server for better scalability and reliability
+
         await MailService.sendVerificationEmail(user, token);
+    }
+
+    static async requestPasswordReset({ body }: Partial<Request>) {
+        const { error, value: data } = Joi.object({
+            email: Joi.string().trim().email().lowercase().required(),
+        })
+            .options({ stripUnknown: true })
+            .validate(body);
+
+        if (error) throw new BadRequestException(error.message);
+
+        //Check if the users exist by email
+        const user = await BaseUser.findOne({ email: data.email }).select(['_id', 'email', 'firstname', 'lastname']).lean().exec();
+
+        // Don't throw error if user doesn't exist, just return null - so hackers don't exploit this route to know emails on the platform
+        if (!user) return;
+
+        const token = await TokenService.generateVerificationAndResetToken({
+            userId: user._id,
+            token_type: VERIFICATION_TOKEN_TYPE.RESET_PASSWORD_TOKEN,
+        });
+
+        // Implement a task queue when sending emails, to reduce workload on the server for better scalability and reliability
+
+        await MailService.sendPasswordResetEmail(user, token);
     }
 
     static async verifyEmail({ query }: Partial<Request>) {
@@ -88,7 +115,8 @@ class AuthService {
 
         if (error) throw new BadRequestException(error.message);
 
-        const user = await BaseUser.findOne({ email: data.email }).lean().exec();
+        //Check if the user exist
+        const user = await BaseUser.findOne({ email: data.email }).select(['_id', 'isVerified']).lean().exec();
 
         if (!user) throw new BadRequestException('email does not exists');
 
@@ -107,6 +135,35 @@ class AuthService {
     }
 
 
+    static async resetPassword({body, query}: Partial<Request>) {
+
+        const {error, value:data} = Joi.object({
+            email: Joi.string().trim().email().lowercase().required(),
+            token: Joi.string().required(),
+            new_password: Joi.string().trim().min(8).required()
+        }).options({stripUnknown: true}).validate(body)
+
+
+        if (error) throw new BadRequestException(error.message);
+
+        const user = await BaseUser.findOne({email: data.email}).select(["_id"]).lean().exec();
+
+        if(!user) throw new BadRequestException('invalid email');
+
+        const isValid = await TokenService.verifyEmailToken({
+            userId: user._id,
+            _token: data.token,
+            token_type: VERIFICATION_TOKEN_TYPE.RESET_PASSWORD_TOKEN,
+        });
+
+        if(!isValid) throw new BadRequestException('invalid or expired token. Kindly make a new password reset request');
+
+        // Generate the hash for new password
+        const passwordHash = await hashPassword(data.new_password);
+
+        // Update the user's Password with the hash
+        await BaseUser.updateOne({_id:user._id}, {password: passwordHash});
+    }
 
     static async login({ body }: Partial<Request>) {
         const { error, value } = Joi.object({

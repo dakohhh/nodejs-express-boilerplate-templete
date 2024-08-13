@@ -1,10 +1,12 @@
-import EmailVerification from '@/email-templates/email-verifcation';
+import EmailVerification from '@/email-templates/email-verification';
+import PasswordReset from '@/email-templates/password-reset';
 import { IVerificationToken } from '@/types';
 import { IUser } from '@/types';
 import { render } from '@react-email/components';
 import settings from '@/settings';
 import nodemailer from 'nodemailer';
-import { mailerInstance } from '@/libraries/nodemailer';
+import { mailerInstance, Mailer } from '@/libraries/nodemailer';
+
 class MailService {
     static async sendWelcomeMail(user: Pick<IUser, '_id' | 'email'>) {}
 
@@ -25,6 +27,28 @@ class MailService {
         };
 
         return await mailerInstance.sendMail(mailOptions);
+    }
+
+    static async sendPasswordResetEmail(
+        user: Pick<IUser, 'email' | 'firstname' | 'lastname'>,
+        token: Pick<IVerificationToken, 'token'>
+    ) {
+
+        const emailProp = {
+            name: `${user.firstname} ${user.lastname}`,
+            passwordResetLink: `${settings.BASE_URL}/auth/reset-password?token=${token.token}?email=${user.email}`,
+        };
+
+        const mailOptions: nodemailer.SendMailOptions = {
+            to: user.email,
+            subject: 'Reset Password for User',
+            text: render(PasswordReset(emailProp), { plainText: true }),
+            html: render(PasswordReset(emailProp)),
+        };
+
+        return await mailerInstance.sendMail(mailOptions);
+
+
     }
 }
 

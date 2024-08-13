@@ -1,6 +1,6 @@
 import settings from '@/settings';
 import nodemailer from 'nodemailer';
-class Mailer {
+export class Mailer {
     private transporter: nodemailer.Transporter;
     private static instance: Mailer;
 
@@ -56,6 +56,7 @@ class Mailer {
 
             .catch((error) => {
                 console.log(error);
+                // use sentry to send notifications of a failed email
             });
     }
 
