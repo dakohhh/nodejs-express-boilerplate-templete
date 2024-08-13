@@ -51,11 +51,10 @@ class AuthController {
         }
     }
 
-    static async resetPassword(req:Request, res: Response, next: NextFunction) {
-        try{
+    static async resetPassword(req: Request, res: Response, next: NextFunction) {
+        try {
             const results = await AuthService.resetPassword(req);
             res.status(StatusCodes.OK).json(response('password reset successful', results));
-
         } catch (error) {
             next(error);
         }

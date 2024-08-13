@@ -33,7 +33,6 @@ class MailService {
         user: Pick<IUser, 'email' | 'firstname' | 'lastname'>,
         token: Pick<IVerificationToken, 'token'>
     ) {
-
         const emailProp = {
             name: `${user.firstname} ${user.lastname}`,
             passwordResetLink: `${settings.BASE_URL}/auth/reset-password?token=${token.token}?email=${user.email}`,
@@ -47,8 +46,6 @@ class MailService {
         };
 
         return await mailerInstance.sendMail(mailOptions);
-
-
     }
 }
 

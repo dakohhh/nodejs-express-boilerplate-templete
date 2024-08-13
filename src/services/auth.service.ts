@@ -90,7 +90,10 @@ class AuthService {
         if (error) throw new BadRequestException(error.message);
 
         //Check if the users exist by email
-        const user = await BaseUser.findOne({ email: data.email }).select(['_id', 'email', 'firstname', 'lastname']).lean().exec();
+        const user = await BaseUser.findOne({ email: data.email })
+            .select(['_id', 'email', 'firstname', 'lastname'])
+            .lean()
+            .exec();
 
         // Don't throw error if user doesn't exist, just return null - so hackers don't exploit this route to know emails on the platform
         if (!user) return;
@@ -134,21 +137,20 @@ class AuthService {
         await BaseUser.updateOne({ _id: user._id }, { isVerified: true });
     }
 
-
-    static async resetPassword({body, query}: Partial<Request>) {
-
-        const {error, value:data} = Joi.object({
+    static async resetPassword({ body, query }: Partial<Request>) {
+        const { error, value: data } = Joi.object({
             email: Joi.string().trim().email().lowercase().required(),
             token: Joi.string().required(),
-            new_password: Joi.string().trim().min(8).required()
-        }).options({stripUnknown: true}).validate(body)
-
+            new_password: Joi.string().trim().min(8).required(),
+        })
+            .options({ stripUnknown: true })
+            .validate(body);
 
         if (error) throw new BadRequestException(error.message);
 
-        const user = await BaseUser.findOne({email: data.email}).select(["_id"]).lean().exec();
+        const user = await BaseUser.findOne({ email: data.email }).select(['_id']).lean().exec();
 
-        if(!user) throw new BadRequestException('invalid email');
+        if (!user) throw new BadRequestException('invalid email');
 
         const isValid = await TokenService.verifyEmailToken({
             userId: user._id,
@@ -156,13 +158,14 @@ class AuthService {
             token_type: VERIFICATION_TOKEN_TYPE.RESET_PASSWORD_TOKEN,
         });
 
-        if(!isValid) throw new BadRequestException('invalid or expired token. Kindly make a new password reset request');
+        if (!isValid)
+            throw new BadRequestException('invalid or expired token. Kindly make a new password reset request');
 
         // Generate the hash for new password
         const passwordHash = await hashPassword(data.new_password);
 
         // Update the user's Password with the hash
-        await BaseUser.updateOne({_id:user._id}, {password: passwordHash});
+        await BaseUser.updateOne({ _id: user._id }, { password: passwordHash });
     }
 
     static async login({ body }: Partial<Request>) {
