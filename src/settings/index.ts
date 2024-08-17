@@ -10,7 +10,7 @@ dotenv.config();
 // # To add a new variable:
 // ============================================================
 // - For environment variables & constants that are the same across all environments, add them to the GLOBAL_CONSTANTS object.
-// - For environment-specific variables (i.e they change depending on the environemnt), add them to the environment's object in each of the CONFIG_BUILDER object.
+// - For environment-specific variables (i.e they change depending on the environment), add them to the environment's object in each of the CONFIG_BUILDER object.
 
 // # To add a new environment:
 // ============================================================

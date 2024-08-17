@@ -5,7 +5,7 @@ import { IUser } from '@/types';
 import { render } from '@react-email/components';
 import settings from '@/settings';
 import nodemailer from 'nodemailer';
-import { mailerInstance, Mailer } from '@/libraries/nodemailer';
+import { mailerInstance } from '@/libraries/nodemailer';
 
 class MailService {
     static async sendWelcomeMail(user: Pick<IUser, '_id' | 'email'>) {}

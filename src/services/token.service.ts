@@ -6,7 +6,7 @@ import { generateRandomOtp } from '@/utils/generate';
 import { comparePassword, hashPassword } from '@/authentication/hash';
 import { VERIFICATION_TOKEN_TYPE } from '@/enums/token-types';
 
-import VerificationToken from '@/models/verification.model';
+import VerificationToken from '@/models/verification_token.model';
 import crypto from 'crypto';
 import { BadRequestException } from '@/utils/exceptions';
 import { BaseUser } from '@/models';

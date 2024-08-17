@@ -8,7 +8,7 @@ import Joi from 'joi';
 import { VERIFICATION_TOKEN_TYPE } from '@/enums/token-types';
 
 import MailService from './mail.service';
-import VerificationToken from '@/models/verification.model';
+import VerificationToken from '@/models/verification_token.model';
 import EmailVerification from '@/email-templates/email-verification';
 
 // import { transporter } from '@/libraries/nodemailer';
