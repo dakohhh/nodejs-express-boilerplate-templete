@@ -9,8 +9,8 @@
     "build": "tsc && tsc-alias",
     "lint": "eslint \"{src,apps,libs,test}/**/*{.ts,.mjs}\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*{.ts}\" --fix",
-    "format": "prettier --write \"src/**/*.{ts,js,json,css,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,js,json,css,md}\""
+    "format": "prettier --write \"src/**/*.{ts,js,json,css,md,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,css,md,tsx}\""
   },
   "author": "",
   "license": "ISC",

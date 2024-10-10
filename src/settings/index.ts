@@ -55,9 +55,9 @@ const GLOBAL_CONFIG = {
     USE_AWS_S3: process.env.USE_AWS_S3 ? true : false,
 
     AWS: {
+        AWS_REGION: process.env.AWS_REGION as string,
         AWS_S3_CONFIG: {
             BUCKET_NAME: process.env.S3_BUCKET_NAME as string,
-            REGION: process.env.S3_BUCKET_REGION as string,
         },
 
         AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID as string,
