@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && node ./build/src/index.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
+    "dev": "cross-env ENV=development nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
     "build": "tsc && tsc-alias",
     "lint": "eslint \"{src,apps,libs,test}/**/*{.ts,.mjs}\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*{.ts}\" --fix",
@@ -15,6 +15,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.668.0",
+    "@aws-sdk/cloudfront-signer": "^3.662.0",
+    "@aws-sdk/lib-storage": "^3.668.0",
+    "@aws-sdk/s3-request-presigner": "^3.668.0",
     "@react-email/components": "0.0.22",
     "base64url": "^3.0.1",
     "bcrypt": "^5.1.1",
@@ -34,9 +38,11 @@
     "mongoose": "^8.5.1",
     "morgan": "^1.10.0",
     "ms": "^2.1.3",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.14",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sharp": "^0.33.5",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
@@ -49,6 +55,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/ms": "^0.7.34",
+    "@types/multer": "^1.4.12",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

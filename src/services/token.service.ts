@@ -2,7 +2,7 @@ import { Payload } from '@/types';
 import settings from '@/settings';
 import JWT from 'jsonwebtoken';
 import { IUser } from '@/types';
-import { generateRandomOtp } from '@/utils/generate';
+import { generateRandomOtp } from '@/utils/helper-functions';
 import { comparePassword, hashPassword } from '@/authentication/hash';
 import { VERIFICATION_TOKEN_TYPE } from '@/enums/token-types';
 

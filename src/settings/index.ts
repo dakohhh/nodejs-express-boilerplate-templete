@@ -51,6 +51,25 @@ const GLOBAL_CONFIG = {
         ADMIN: 'admin',
         STUDENT: 'student',
     },
+
+    USE_AWS_S3: process.env.USE_AWS_S3 ? true : false,
+
+    AWS: {
+        AWS_S3_CONFIG: {
+            BUCKET_NAME: process.env.S3_BUCKET_NAME as string,
+            REGION: process.env.S3_BUCKET_REGION as string,
+        },
+
+        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID as string,
+        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY as string,
+
+        AWS_CLOUD_FRONT: {
+            CLOUDFRONT_DISTRIBUTION_ID: process.env.CLOUDFRONT_DISTRIBUTION_ID as string,
+            CLOUDFRONT_KEY_PAIR_ID: process.env.CLOUDFRONT_KEY_PAIR_ID as string,
+            CLOUDFRONT_PRIVATE_KEY: process.env.CLOUDFRONT_PRIVATE_KEY as string,
+            CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME: process.env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME as string,
+        },
+    },
 };
 
 const config = {

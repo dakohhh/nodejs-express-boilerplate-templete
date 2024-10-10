@@ -7,7 +7,7 @@ class AuthController {
     static async login(req: Request, res: Response, next: NextFunction) {
         try {
             const results = await AuthService.login(req);
-            res.status(StatusCodes.OK).json(response('login successfull', results));
+            res.status(StatusCodes.OK).json(response('login successful', results));
         } catch (error) {
             next(error);
         }
@@ -18,7 +18,7 @@ class AuthController {
             const user = await AuthService.registerUser(req);
             const results = { user: user };
 
-            res.status(StatusCodes.CREATED).json(response('user registered successfull', results));
+            res.status(StatusCodes.CREATED).json(response('user registered successful', results));
         } catch (error) {
             next(error);
         }
