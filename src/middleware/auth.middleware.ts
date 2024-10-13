@@ -4,7 +4,7 @@ import { UserRoles } from '@/enums/user-roles';
 import { UnauthorizedException, ForbiddenException } from '@/utils/exceptions';
 import settings from '@/settings';
 import { Payload } from '@/types';
-import { BaseUser } from '@/models';
+import { User } from '@/models';
 import { IUser } from '@/types';
 import { AuthRequest } from '@/types/auth';
 
@@ -24,7 +24,7 @@ function auth(roles: UserRoles[]) {
 
             const payload = JWT.verify(token, settings.JWT_SECRET) as Payload;
 
-            let user = await BaseUser.findOne({ _id: payload.userId });
+            let user = await User.findOne({ _id: payload.userId });
 
             // If the user is not found
             if (!user) throw new UnauthorizedException('-middleware/user-not-found');
@@ -36,11 +36,11 @@ function auth(roles: UserRoles[]) {
             if (user.accountDisabled) throw new UnauthorizedException('-middleware/user-account-disabled');
 
             // If role is not authorized to access route
-            if (!roles.includes(user.role as UserRoles))
-                throw new ForbiddenException('-middleware/user-not-authorized');
+            // if (!roles.includes(user.role as UserRoles))
+            //     throw new ForbiddenException('-middleware/user-not-authorized');
 
             // Update the last active date for user
-            user = (await BaseUser.findByIdAndUpdate(user.id, { lastActive: Date.now() }, { new: true })) as IUser;
+            user = (await User.findByIdAndUpdate(user.id, { lastActive: Date.now() }, { new: true })) as IUser;
 
             req.user = user;
 

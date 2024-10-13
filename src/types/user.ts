@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface IUser extends Document {
     _id: string;
@@ -7,7 +7,9 @@ export interface IUser extends Document {
     phoneNumber: string;
     email: string;
     password: string;
-    role: 'student' | 'vendor' | 'admin';
+    role?: Types.ObjectId;
+    isStaff: boolean;
+    isSuperAdmin: boolean;
     isVerified: boolean;
     accountDisabled: boolean;
     lastActive: Date;

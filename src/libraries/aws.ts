@@ -126,7 +126,6 @@ export const getSignedURLFromS3 = async ({
     } catch (error) {
         console.log(error);
         // Use Sentry to capture error
-        // ("From Third-Party: fn (getSignedURLFromS3)"), { extra: { params, response: error }, level: "error" };
         return null;
     }
 };

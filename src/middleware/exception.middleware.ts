@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import { MulterError } from 'multer';
 import response from '@/utils/response';
 import * as exception from '@/utils/exceptions';
+import { CastError } from 'mongoose';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 const configureErrorMiddleware = (app: Express) => {
@@ -25,6 +26,11 @@ const configureErrorMiddleware = (app: Express) => {
             res.status(401).json(response('invalid-token', null, false));
         } else if (error instanceof MulterError) {
             res.status(400).json(response(error.message, null, false));
+        } else if ((error as any).name == 'CastError') {
+            console.log((error as any).value);
+            console.log((error as any).this);
+            console.log((error as any).path);
+            res.status(404).json(response(`The value '${(error as any).value}' is not found`, null, false));
         } else {
             // Handling other types of errors
             res.status(500).json(response('Internal Server Error', null, false));

@@ -8,40 +8,40 @@ const baseOptions = {
     timestamps: true,
 };
 
-const BaseUserSchema: Schema<IUser> = new mongoose.Schema<IUser>(
+const UserSchema: Schema<IUser> = new mongoose.Schema<IUser>(
     {
         firstname: {
             type: String,
             required: true,
-            minlength: 3,
-            maxlength: 30,
+            minLength: 3,
+            maxLength: 30,
         },
         lastname: {
             type: String,
             required: true,
-            minlength: 3,
-            maxlength: 50,
+            minLength: 3,
+            maxLength: 50,
         },
 
         phoneNumber: {
             type: String,
             required: true,
-            minlength: 10,
-            maxlength: 10,
+            minLength: 10,
+            maxLength: 10,
             unique: true,
         },
 
         email: {
             type: String,
             required: true,
-            maxlength: 255,
+            maxLength: 255,
             unique: true,
         },
 
         password: {
             type: String,
             required: true,
-            minlength: 8,
+            minLength: 8,
         },
 
         isVerified: {
@@ -54,14 +54,25 @@ const BaseUserSchema: Schema<IUser> = new mongoose.Schema<IUser>(
             default: false,
         },
 
+        isStaff: {
+            type: Boolean,
+            default: false,
+        },
+
+        isSuperAdmin: {
+            type: Boolean,
+            default: false,
+        },
+
         lastActive: {
             type: Date,
             default: () => Date.now(),
         },
 
         role: {
-            type: String,
-            enum: Object.values(UserRoles),
+            type: Schema.Types.ObjectId,
+            ref: 'Role',
+            default: null,
         },
     },
     baseOptions
@@ -73,6 +84,6 @@ const BaseUserSchema: Schema<IUser> = new mongoose.Schema<IUser>(
 //     console.log(this.walletId);
 // });
 
-const BaseUser = mongoose.model<IUser>('User', BaseUserSchema);
+const User = mongoose.model<IUser>('User', UserSchema);
 
-export default BaseUser;
+export default User;

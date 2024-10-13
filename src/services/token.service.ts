@@ -5,18 +5,15 @@ import { IUser } from '@/types';
 import { generateRandomOtp } from '@/utils/helper-functions';
 import { comparePassword, hashPassword } from '@/authentication/hash';
 import { VERIFICATION_TOKEN_TYPE } from '@/enums/token-types';
-
 import VerificationToken from '@/models/verification_token.model';
 import crypto from 'crypto';
-import { BadRequestException } from '@/utils/exceptions';
-import { BaseUser } from '@/models';
 
 export class TokenService {
     static async generateAuthToken(user: Pick<IUser, '_id' | 'role'>) {
         // Construct JWT payload
         const tokenData: Payload = {
             userId: user._id,
-            role: user.role,
+            // role: user.role,
         };
 
         // Generate access token and refresh-token JWT

@@ -1,4 +1,4 @@
-import { BaseUser, Token } from '@/models';
+import { User, Token } from '@/models';
 import { Request } from 'express';
 import { BadRequestException } from '@/utils/exceptions';
 import { hashPassword, comparePassword } from '@/authentication/hash';
@@ -35,10 +35,9 @@ class AuthService {
             phoneNumber: value.phoneNumber,
             email: value.email,
             password: hashedPassword,
-            role: UserRoles.STUDENT,
         };
 
-        const new_user = await new BaseUser(context).save();
+        const new_user = await new User(context).save();
 
         await new_user.save();
 
@@ -64,7 +63,7 @@ class AuthService {
 
         if (error) throw new BadRequestException(error.message);
 
-        const user = await BaseUser.findOne({ email: value.email });
+        const user = await User.findOne({ email: value.email });
 
         if (!user) throw new BadRequestException('user not found');
 
@@ -90,7 +89,7 @@ class AuthService {
         if (error) throw new BadRequestException(error.message);
 
         //Check if the users exist by email
-        const user = await BaseUser.findOne({ email: data.email })
+        const user = await User.findOne({ email: data.email })
             .select(['_id', 'email', 'firstname', 'lastname'])
             .lean()
             .exec();
@@ -119,7 +118,7 @@ class AuthService {
         if (error) throw new BadRequestException(error.message);
 
         //Check if the user exist
-        const user = await BaseUser.findOne({ email: data.email }).select(['_id', 'isVerified']).lean().exec();
+        const user = await User.findOne({ email: data.email }).select(['_id', 'isVerified']).lean().exec();
 
         if (!user) throw new BadRequestException('email does not exists');
 
@@ -134,7 +133,7 @@ class AuthService {
         if (!isValid) throw new BadRequestException('invalid or expired token. Kindly request a new verification link');
 
         // Update Verification Status of user
-        await BaseUser.updateOne({ _id: user._id }, { isVerified: true });
+        await User.updateOne({ _id: user._id }, { isVerified: true });
     }
 
     static async resetPassword({ body, query }: Partial<Request>) {
@@ -148,7 +147,7 @@ class AuthService {
 
         if (error) throw new BadRequestException(error.message);
 
-        const user = await BaseUser.findOne({ email: data.email }).select(['_id']).lean().exec();
+        const user = await User.findOne({ email: data.email }).select(['_id']).lean().exec();
 
         if (!user) throw new BadRequestException('invalid email');
 
@@ -165,7 +164,7 @@ class AuthService {
         const passwordHash = await hashPassword(data.new_password);
 
         // Update the user's Password with the hash
-        await BaseUser.updateOne({ _id: user._id }, { password: passwordHash });
+        await User.updateOne({ _id: user._id }, { password: passwordHash });
     }
 
     static async login({ body }: Partial<Request>) {
@@ -179,7 +178,7 @@ class AuthService {
         if (error) throw new BadRequestException(error.message);
 
         // Check if user exists
-        const user = await BaseUser.findOne({ email: value.email });
+        const user = await User.findOne({ email: value.email });
 
         if (!user) throw new BadRequestException('Invalid email or password');
 

@@ -17,7 +17,7 @@ dotenv.config();
 // 1. Add a new key to the CONFIG_BUILDER object with the environment name.
 // 2. Duplicate the development object and replace the values with the new environment's values.
 
-const DEPLOYMENT_ENV: string = process.env.NODE_ENV ? 'development' : 'production';
+const DEPLOYMENT_ENV: string = process.env.ENV ? 'development' : 'production';
 
 const GLOBAL_CONFIG = {
     // System Constants
@@ -82,7 +82,7 @@ const config = {
 
         // DB Configs
         // ============================================================
-        MONGODB_URI: process.env.DEV_MONGO_URL as string,
+        MONGODB_URI: 'mongodb://localhost:27017/NodeJSExpressBoilerplate',
 
         // App Level Configs
         // ============================================================
