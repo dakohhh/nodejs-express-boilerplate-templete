@@ -44,7 +44,7 @@ interface GetCloudFrontURLOptions {
 // =============================================================================
 const s3Client = new S3Client({
     region: settings.AWS.AWS_REGION,
-    credentials: {
+    credentials: { 
         accessKeyId: settings.AWS.AWS_ACCESS_KEY_ID,
         secretAccessKey: settings.AWS.AWS_SECRET_ACCESS_KEY,
     },
